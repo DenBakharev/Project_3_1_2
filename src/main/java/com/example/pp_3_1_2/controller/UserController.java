@@ -44,15 +44,19 @@ public class UserController {
     }
 
     @GetMapping("/update/{id}")
-    public String updateUserForm(@PathVariable("id") Long id, Model model){
-        User user = userService.getUserById(id);
-        model.addAttribute("user", user);
+    public String updateUserForm(@PathVariable("id") Long id, Model model) {
+        User userToUpdate = userService.getUserById(id);
+        model.addAttribute("userToUpdate", userToUpdate);
         return "update";
     }
 
-    @PostMapping("/update")
-    public String updateUser(User user){
-        userService.saveUser(user);
+    @PostMapping("/update/{id}")
+    public String updateUser(@PathVariable("id") Long id, User updatedUser) {
+        User userInDb = userService.getUserById(id);
+        userInDb.setName(updatedUser.getName());
+        userInDb.setSurname(updatedUser.getSurname());
+        userInDb.setAge(updatedUser.getAge());
+        userService.saveUser(userInDb);
         return "redirect:/users";
     }
 }
